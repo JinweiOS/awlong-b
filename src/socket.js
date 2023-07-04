@@ -1,7 +1,7 @@
 const { WebSocketServer } = require('ws');
 
 function parseBuf(jBuf) {
-  const jsonStr = jsonBuf.toString('utf-8');
+  const jsonStr = jBuf.toString('utf-8');
   return JSON.parse(jsonStr);
 }
 
@@ -29,14 +29,15 @@ async function initSocketServer(server) {
     // 将websocket链接保存连接池中
     ws.on('message', (jsonBuf) => {
       const data = parseBuf(jsonBuf)
+      console.log(data)
       // 初始化逻辑
       if (data.type === protocolType.online.desc) {
         console.log('成功push')
         wsPool.set(data.userId, ws)
       }
-      setInterval(() => {
-        ws.send('hello')
-      }, 1000)
+      // setInterval(() => {
+      //   ws.send('hello')
+      // }, 1000)
     });
   });
 }

@@ -65,15 +65,15 @@ router.get('/server/status', (ctx) => {
 })
 
 router.get('/user/vote', (ctx) => {
-  const { userId, serverId, turn, votion, turnT } = ctx.query
-  if (!userId || !serverId || !turn || !votion || !turnT) {
+  const { userId, serverId, votion } = ctx.query
+  if (!userId || !serverId || !votion) {
     ctx.body = {
       code: -1,
       msg: '参数不完整',
     }
     return;
   }
-  vote(userId, turn, votion, serverId, turnT)
+  vote(userId, votion, serverId)
   ctx.body = {
     code: 0,
     data: {
@@ -85,13 +85,17 @@ router.get('/user/vote', (ctx) => {
 router.post('/task/launch', (ctx) => {
   // turnT: 任务类型，非任务轮，任务轮
   const userIds = ctx.request.body.ids
-  if (!userIds) {
+  const turnType = ctx.request.body.turnType
+  const serverId = ctx.request.body.serverId
+  console.log(userIds)
+  if (!userIds || !turnType || !serverId) {
     ctx.body = {
       code: -1,
       msg: '参数错误'
     }
+    return;
   }
-  launchTaskVote(userIds)
+  launchTaskVote(userIds, turnType, serverId)
   ctx.body = {
     code: 0,
     data: {
@@ -136,6 +140,19 @@ router.get('/user/info/all', (ctx) => {
     code: 0,
     data: getAllUserInfo(serverId)
   }
+})
+
+router.get('/turn/reset', (ctx) => {
+  const serverId = ctx.query.serverId
+  if (!serverId) {
+    ctx.body = {
+      code: -1,
+      msg: '参数错误'
+    }
+    return;
+  }
+
+  
 })
 
 

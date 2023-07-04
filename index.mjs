@@ -2,10 +2,12 @@ import Koa from 'koa'
 import KoaCors from '@koa/cors'
 import http from 'http'
 import router from './src/router.js'
-import {koaBody} from 'koa-body'
+import { koaBody } from 'koa-body'
 const app = new Koa();
 import { initSocketServer } from './src/socket.js'
-app.use(koaBody())
+app.use(koaBody({
+  multipart: true
+}))
 app.use(KoaCors())
 app.use(router.routes());
 app.use(router.allowedMethods());
@@ -16,6 +18,6 @@ app.use(async ctx => {
 const server = http.createServer(app.callback())
 // todo: websocket init
 await initSocketServer(server)
-server.listen(3000, () => {
+server.listen(3000, '10.3.10.142', () => {
   console.log('Server running on port 3000')
 });
