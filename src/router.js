@@ -8,7 +8,9 @@ const {
   getTurnInfo,
   getAllUserInfo,
   turnType,
-  launchTaskVote
+  launchTaskVote,
+  clearVotion,
+  broadcastUserInfo
 } = require('./util')
 
 router.get('/server/create', (ctx) => {
@@ -142,7 +144,7 @@ router.get('/user/info/all', (ctx) => {
   }
 })
 
-router.get('/turn/reset', (ctx) => {
+router.get('/play/again', (ctx) => {
   const serverId = ctx.query.serverId
   if (!serverId) {
     ctx.body = {
@@ -151,8 +153,13 @@ router.get('/turn/reset', (ctx) => {
     }
     return;
   }
-
-  
+  clearVotion(serverId)
+  ctx.body = {
+    code: 0,
+    data: {
+      msg: '重置成功'
+    }
+  }
 })
 
 

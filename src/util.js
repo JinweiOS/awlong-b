@@ -54,7 +54,41 @@ function createUser(userName, serverId) {
   }
   server.users[user.userId] = user
   // 发送事件，通知websocket
+  broadcastUserInfo(serverId)
   return user
+}
+
+function broadcastVoteInfo(serverId) {
+  const server = table.get(serverId);
+  if (server) {
+    console.log('广播')
+    Object.keys(server.users).forEach((userId) => {
+      const ws = wsPool.get(userId);
+      if (ws) {
+        ws.send(JSON.stringify({
+          type: 'voteinfo',
+          data: server.voteStatus
+        }))
+      }
+    })
+  }
+}
+
+function broadcastUserInfo(serverId) {
+  
+  const server = table.get(serverId);
+  if (server) {
+    console.log('广播')
+    Object.keys(server.users).forEach((userId) => {
+      const ws = wsPool.get(userId);
+      if (ws) {
+        ws.send(JSON.stringify({
+          type: 'useradd',
+          data: Object.values(server.users)
+        }))
+      }
+    })
+  }
 }
 
 // votion: agreee, disagree
@@ -80,11 +114,13 @@ function vote(userId, votion, serverId) {
     if (server.voteStatus[turn].turnsInfo.length === server.personCount) {
       // TODO: 发送websocket，通知客户端获取投票结果
       console.log('非任务轮投票结束')
+      broadcastVoteInfo(serverId)
     }
   } else {
     // 非任务轮投票结束标志为 所有被选中人都投票了
     if (server.voteStatus[turn].turnsInfo.length === server.personCount - 1) {
       console.log('任务轮投票结束')
+      broadcastVoteInfo(serverId)
     }
   }
 }
@@ -131,6 +167,17 @@ function launchTaskVote(userIds, turnType, serverId) {
   }
 }
 
+function clearVotion(serverId) {
+  const server = table.get(serverId)
+  if (server) {
+    Object.keys(server.users).forEach(userId => {
+      server.users[userId].votion = []
+    })
+    server.currentTurn = -1
+    server.voteStatus = {}
+  }
+}
+
 module.exports = {
   createServer,
   createUser,
@@ -139,5 +186,7 @@ module.exports = {
   getTurnInfo,
   getAllUserInfo,
   launchTaskVote,
-  turnType: Object.freeze(turnType)
+  turnType: Object.freeze(turnType),
+  clearVotion,
+  broadcastUserInfo
 }
