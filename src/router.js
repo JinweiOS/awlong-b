@@ -164,7 +164,7 @@ router.get('/play/again', (ctx) => {
 
 router.post('/file/upload', (ctx) => {
   console.log(ctx.request.files.smfile.newFilename)
-  const staticPrefix = 'http://10.3.10.142:8000/static'
+  const staticPrefix = 'http://124.223.90.239:8000/static'
   ctx.body = {
     code: 0,
     data: {
