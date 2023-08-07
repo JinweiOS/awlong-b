@@ -37,6 +37,6 @@ await initSocketServer(server)
 
 const host = '127.0.0.1'
 const realHost = '10.3.10.142'
-server.listen(8000, realHost, () => {
+server.listen(8000, host, () => {
   console.log('Server running on port 8000')
 });

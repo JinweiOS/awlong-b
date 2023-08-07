@@ -1,5 +1,9 @@
 const KoaRouter = require('koa-router')
+
+const routerInject = require('./lession/qingyunke')
 const router = new KoaRouter()
+// 注册路由
+routerInject(router)
 const {
   createServer,
   createUser,
