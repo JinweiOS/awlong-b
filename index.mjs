@@ -35,8 +35,7 @@ const server = http.createServer(mainApp.callback())
 // todo: websocket init
 await initSocketServer(server)
 
-const host = '127.0.0.1'
-const realHost = '10.3.10.142'
-server.listen(8000, host, () => {
+const realHost = '0.0.0.0'
+server.listen(8000, realHost, () => {
   console.log('Server running on port 8000')
 });
