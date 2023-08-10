@@ -168,7 +168,7 @@ router.get('/play/again', (ctx) => {
 
 router.post('/file/upload', (ctx) => {
   console.log(ctx.request.files.smfile.newFilename)
-  const staticPrefix = 'http://124.223.90.239:8000/static'
+  const staticPrefix = 'https://api.helper.beingthink.com/static'
   ctx.body = {
     code: 0,
     data: {
